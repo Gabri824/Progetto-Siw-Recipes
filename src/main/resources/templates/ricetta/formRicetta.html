@@ -156,12 +156,24 @@
     </div>
 
     <script>
+        // Indice per tracciare il numero di ingredienti aggiunti
+        // Serve per generare nomi univoci per gli input (es. ingredienti[1].nome)
         let ingredienteIndex = 1;
 
+        /**
+         * Funzione per aggiungere una nuova riga di ingredienti
+         * Viene chiamata quando si clicca sul pulsante "+ Aggiungi Ingrediente"
+         */
         function aggiungiIngrediente() {
             const container = document.getElementById('ingredienti-container');
+
+            // Crea un nuovo div per la riga
             const newRow = document.createElement('div');
             newRow.className = 'ingrediente-row';
+
+            // Inserisce l'HTML per i campi di input
+            // Nota l'uso di `ingredienteIndex` nell'attributo name: questo permette a Spring
+            // di mappare automaticamente i valori nella lista 'ingredienti' dell'oggetto Ricetta
             newRow.innerHTML = `
                 <input type="text" name="ingredienti[${ingredienteIndex}].nome" placeholder="Nome ingrediente" class="ingrediente-nome">
                 <input type="number" name="ingredienti[${ingredienteIndex}].quantita" placeholder="Qtà" step="0.1" min="0" class="ingrediente-quantita">
@@ -179,10 +191,14 @@
                 </select>
                 <button type="button" class="btn-remove-ingrediente" onclick="rimuoviIngrediente(this)" title="Rimuovi">✕</button>
             `;
+
+            // Aggiunge la riga al contenitore
             container.appendChild(newRow);
+
+            // Incrementa l'indice per il prossimo ingrediente
             ingredienteIndex++;
 
-            // Animazione entrata
+            // Animazione di entrata (fade in + scivolamento dall'alto)
             newRow.style.opacity = '0';
             newRow.style.transform = 'translateY(-10px)';
             setTimeout(() => {
@@ -192,31 +208,52 @@
             }, 10);
         }
 
+        /**
+         * Funzione per rimuovere una riga di ingredienti
+         * @param button Il pulsante che ha scatenato l'evento (la "X")
+         */
         function rimuoviIngrediente(button) {
             const container = document.getElementById('ingredienti-container');
             const rows = container.querySelectorAll('.ingrediente-row');
 
-            // Mantieni almeno una riga
+            // Impedisce di cancellare l'ultima riga rimasta
             if (rows.length > 1) {
+                // Trova l'elemento padre (la riga intera) del bottone cliccato
                 const row = button.closest('.ingrediente-row');
+
+                // Animazione di uscita (fade out + scivolamento a sinistra)
                 row.style.transition = 'all 0.3s ease';
                 row.style.opacity = '0';
                 row.style.transform = 'translateX(-20px)';
+
+                // Attende la fine dell'animazione prima di rimuovere l'elemento dal DOM
                 setTimeout(() => {
                     row.remove();
+                    // IMPORTANTE: Dopo la rimozione, bisogna rinumerare gli indici
+                    // per evitare "buchi" nella lista che Spring non saprebbe gestire
                     rinumeraIngredienti();
                 }, 300);
             }
         }
 
+        /**
+         * Funzione cruciale per il Data Binding di Spring MVC
+         * Riscrive gli indici di tutti gli input presenti (0, 1, 2...)
+         * Esempio: se elimino l'ingrediente 1 da una lista di 3, il vecchio 2 diventa il nuovo 1.
+         */
         function rinumeraIngredienti() {
             const container = document.getElementById('ingredienti-container');
             const rows = container.querySelectorAll('.ingrediente-row');
+
+            // Itera su tutte le righe presenti
             rows.forEach((row, index) => {
+                // Aggiorna gli attributi 'name' con il nuovo indice corretto
                 row.querySelector('.ingrediente-nome').name = `ingredienti[${index}].nome`;
                 row.querySelector('.ingrediente-quantita').name = `ingredienti[${index}].quantita`;
                 row.querySelector('.ingrediente-unita').name = `ingredienti[${index}].unitaMisura`;
             });
+
+            // Aggiorna il contatore globale per le future aggiunte
             ingredienteIndex = rows.length;
         }
     </script>

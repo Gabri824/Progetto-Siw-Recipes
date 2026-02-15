@@ -195,13 +195,29 @@
     </div>
 
     <script th:inline="javascript">
-        // Inizializza l'indice degli ingredienti basandosi sul numero di ingredienti esistenti
+        /*
+         * Inizializzazione dell'indice:
+         * A differenza della pagina di creazione, qui potremmo avere già degli ingredienti salvati.
+         * Usiamo Thymeleaf (th:inline="javascript") per calcolare lato server quanti ingredienti ci sono.
+         * Se la lista è vuota, partiamo da 1 (perché nel DOM c'è sempre almeno una riga vuota o piena).
+         * Altrimenti, partiamo dalla dimensione della lista esistente.
+         */
         let ingredienteIndex = /*[[${#lists.isEmpty(ricetta.ingredienti) ? 1 : ricetta.ingredienti.size()}]]*/ 1;
 
+        /**
+         * Funzione per aggiungere una nuova riga di ingredienti
+         * Identica a quella di creazione: crea HTML dinamico e lo appende al container.
+         */
         function aggiungiIngrediente() {
             const container = document.getElementById('ingredienti-container');
+
+            // Crea il contenitore della riga
             const newRow = document.createElement('div');
             newRow.className = 'ingrediente-row';
+
+            // Definisce l'HTML interno con gli input corretti
+            // L'attributo 'name' deve seguire lo schema ingredienti[INDICE].campo
+            // affinché Spring possa legare i dati all'oggetto Ricetta al submit
             newRow.innerHTML = `
                 <input type="text" name="ingredienti[${ingredienteIndex}].nome" placeholder="Nome ingrediente" class="ingrediente-nome">
                 <input type="number" name="ingredienti[${ingredienteIndex}].quantita" placeholder="Qtà" step="0.1" min="0" class="ingrediente-quantita">
@@ -219,10 +235,14 @@
                 </select>
                 <button type="button" class="btn-remove-ingrediente" onclick="rimuoviIngrediente(this)" title="Rimuovi">✕</button>
             `;
+
+            // Aggiunge al DOM
             container.appendChild(newRow);
+
+            // Incrementa il contatore per il prossimo inserimento
             ingredienteIndex++;
 
-            // Animazione entrata
+            // Gestisce l'animazione di comparsa
             newRow.style.opacity = '0';
             newRow.style.transform = 'translateY(-10px)';
             setTimeout(() => {
@@ -232,31 +252,49 @@
             }, 10);
         }
 
+        /**
+         * Rimuove una riga specifica e aggiorna gli indici
+         */
         function rimuoviIngrediente(button) {
             const container = document.getElementById('ingredienti-container');
             const rows = container.querySelectorAll('.ingrediente-row');
 
-            // Mantieni almeno una riga
+            // Controllo di sicurezza: non rimuovere l'unica riga rimasta
             if (rows.length > 1) {
                 const row = button.closest('.ingrediente-row');
+
+                // Animazione di uscita
                 row.style.transition = 'all 0.3s ease';
                 row.style.opacity = '0';
                 row.style.transform = 'translateX(-20px)';
+
+                // Rimozione effettiva dopo l'animazione
                 setTimeout(() => {
                     row.remove();
+                    // Fondamentale: ricalcola tutti gli indici per mantenere la lista coerente per Spring
                     rinumeraIngredienti();
                 }, 300);
             }
         }
 
+        /**
+         * Rinumera gli attributi 'name' di tutti gli input visible.
+         * Questo assicura che se rimuoviamo l'elemento intermedio,
+         * la lista inviata al server sia contigua (es. 0, 1, 2) e non frammentata (0, 2).
+         * Spring MVC richiede liste contigue per il binding automatico.
+         */
         function rinumeraIngredienti() {
             const container = document.getElementById('ingredienti-container');
             const rows = container.querySelectorAll('.ingrediente-row');
+
             rows.forEach((row, index) => {
+                // Aggiorna nome, quantità e unità di misura con il nuovo indice
                 row.querySelector('.ingrediente-nome').name = `ingredienti[${index}].nome`;
                 row.querySelector('.ingrediente-quantita').name = `ingredienti[${index}].quantita`;
                 row.querySelector('.ingrediente-unita').name = `ingredienti[${index}].unitaMisura`;
             });
+
+            // Sincronizza il contatore globale con il numero attuale di righe
             ingredienteIndex = rows.length;
         }
     </script>
