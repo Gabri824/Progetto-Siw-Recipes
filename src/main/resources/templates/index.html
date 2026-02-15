@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SiwRecipes - Home</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/index.css}">
+</head>
+
+<body>
+
+    <div id="top" th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Benvenuto su <span class="highlight">SiwRecipes</span></h1>
+            <p class="subtitle">La piattaforma per scoprire, condividere e creare ricette straordinarie</p>
+            <p class="description">
+                Esplora un mondo di sapori autentici, dalle ricette tradizionali italiane
+                alle creazioni più innovative. Unisciti alla nostra community di appassionati
+                di cucina e condividi le tue ricette preferite.
+            </p>
+            <div class="hero-buttons">
+                <a th:href="@{/elencoRicette}" class="btn btn-primary">Esplora le Ricette</a>
+                <a th:href="@{/register}" class="btn btn-secondary">Unisciti a Noi</a>
+            </div>
+        </div>
+        <div class="hero-image">
+            <img th:src="@{/images/img_index1.avif}" alt="Deliziose ricette">
+        </div>
+    </section>
+
+    <section class="about">
+        <div class="about-image">
+            <img th:src="@{/images/img_index2.avif}" alt="Condividi le tue ricette">
+        </div>
+        <div class="about-content">
+            <h2>Le Nostre <span class="highlight">Ricette</span></h2>
+            <p class="about-text">
+                Esplora una vasta collezione di ricette complete di ingredienti, procedimento
+                dettagliato, tempo di preparazione e livello di difficoltà. Dai primi piatti
+                ai dolci, dagli antipasti ai piatti vegetariani: trova l'ispirazione giusta
+                per ogni occasione.
+            </p>
+            <p class="about-text">
+                Registrati per condividere le tue creazioni culinarie con la community!
+                Pubblica le tue ricette e lasciati ispirare dalle creazioni degli altri utenti.
+            </p>
+            <div class="about-buttons">
+                <a th:href="@{/elencoRicette}" class="btn btn-primary">Esplora le Ricette</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="community">
+        <div class="community-content">
+            <h2>Unisciti alla <span class="highlight">Community</span></h2>
+            <p class="community-text">
+                Hai provato una delle nostre ricette? Condividi la tua esperienza lasciando
+                una recensione! Le tue valutazioni aiutano gli altri utenti a scegliere
+                le ricette migliori e a migliorare le proprie creazioni.
+            </p>
+            <p class="community-text">
+                Registrati oggi stesso per diventare parte della nostra community di
+                appassionati di cucina. Condividi, recensisci e scopri nuovi sapori
+                insieme a noi!
+            </p>
+            <div class="community-buttons">
+                <a th:href="@{/register}" class="btn btn-secondary">Unisciti a Noi</a>
+            </div>
+        </div>
+        <div class="community-image">
+            <img th:src="@{/images/img_index3.jpg}" alt="Unisciti alla community">
+        </div>
+    </section>
+
+    <!-- Scroll to Top Button (CSS only) -->
+    <a href="#top" class="scroll-to-top" title="Torna all'inizio">
+        ↑
+    </a>
+
+</body>
+
+</html>

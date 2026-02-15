@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title th:text="'SiwRecipes - ' + ${ricetta.titolo}">SiwRecipes - Dettaglio Ricetta</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/dettaglioRicetta.css}">
+</head>
+
+<body>
+
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="recipe-detail-container">
+
+        <!-- Hero Section -->
+        <section class="recipe-hero">
+            <!-- Immagine della ricetta -->
+            <div class="recipe-image-container" th:if="${ricetta.immagine != null}">
+                <img th:src="@{/ricetta/{id}/immagine(id=${ricetta.id})}" alt="Immagine ricetta" class="recipe-image">
+            </div>
+            <div class="recipe-hero-content">
+                <span class="recipe-category" th:text="${ricetta.categoria}">Categoria</span>
+                <h1 class="recipe-title" th:text="${ricetta.titolo}">Titolo Ricetta</h1>
+                <p class="recipe-description" th:text="${ricetta.descrizione}">Descrizione della ricetta</p>
+
+                <div class="recipe-meta">
+                    <div class="meta-item">
+                        <span class="meta-icon">⏱️</span>
+                        <span class="meta-label">Tempo</span>
+                        <span class="meta-value" th:text="${ricetta.tempoPreparazione} + ' min'">30 min</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon">📊</span>
+                        <span class="meta-label">Difficoltà</span>
+                        <span class="meta-value" th:text="${ricetta.difficoltà}">Media</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-icon">📅</span>
+                        <span class="meta-label">Pubblicata</span>
+                        <span class="meta-value"
+                            th:text="${#temporals.format(ricetta.dataPubblicazione, 'dd/MM/yyyy')}">01/01/2024</span>
+                    </div>
+                </div>
+
+                <div class="recipe-author">
+                    <span class="author-label">Creata da</span>
+                    <span class="author-name"
+                        th:text="${ricetta.autore.nome} + ' ' + ${ricetta.autore.cognome}">Chef</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Section -->
+        <div class="recipe-content">
+
+            <!-- Ingredienti -->
+            <section class="recipe-section ingredients-section">
+                <div class="section-header">
+                    <h2><span class="section-icon">🥕</span> Ingredienti</h2>
+                </div>
+                <ul class="ingredients-list">
+                    <li th:each="ingrediente : ${ricetta.ingredienti}" class="ingredient-item">
+                        <span class="ingredient-name" th:text="${ingrediente.nome}">Farina</span>
+                        <span class="ingredient-quantity" th:text="${ingrediente.quantita}">100</span>
+                        <span class="ingredient-unit" th:text="${ingrediente.unitaMisura}">g</span>
+                    </li>
+                </ul>
+            </section>
+
+            <!-- Procedimento -->
+            <section class="recipe-section procedure-section">
+                <div class="section-header">
+                    <h2><span class="section-icon">👨‍🍳</span> Procedimento</h2>
+                </div>
+                <div class="procedure-text"
+                    th:utext="${#strings.replace(ricetta.procedimento, '&#10;', '&lt;br/&gt;')}">
+                    Istruzioni per la preparazione...
+                </div>
+            </section>
+
+            <!-- Azioni (solo per autore o admin) -->
+            <section class="recipe-actions" sec:authorize="isAuthenticated()">
+                <a th:href="@{/ricetta/edit/{id}(id=${ricetta.id})}" class="btn btn-edit">
+                    <span>✏️</span> Modifica Ricetta
+                </a>
+                <a th:href="@{/ricetta/delete/{id}(id=${ricetta.id})}" class="btn btn-delete"
+                    onclick="return confirm('Sei sicuro di voler eliminare questa ricetta?')">
+                    <span>🗑️</span> Elimina Ricetta
+                </a>
+            </section>
+
+        </div>
+
+        <!-- Sezione Recensioni -->
+        <section class="reviews-section">
+            <div class="section-header">
+                <h2><span class="section-icon">⭐</span> Recensioni</h2>
+                <span class="reviews-count" th:text="'(' + ${#lists.size(ricetta.recensioni)} + ')'"></span>
+            </div>
+
+            <!-- Bottone Nuova Recensione (solo per utenti loggati) -->
+            <div class="new-review-action" sec:authorize="isAuthenticated()">
+                <a th:href="@{/ricetta/{id}/formRecensione(id=${ricetta.id})}" class="btn btn-primary">
+                    <span>✍️</span> Scrivi una Recensione
+                </a>
+            </div>
+
+            <!-- Lista Recensioni -->
+            <div class="reviews-list">
+                <div th:if="${#lists.isEmpty(ricetta.recensioni)}" class="no-reviews">
+                    <p>Nessuna recensione ancora. Sii il primo a lasciare una recensione!</p>
+                </div>
+
+                <article th:each="recensione : ${ricetta.recensioni}" class="review-card">
+                    <div class="review-header">
+                        <div class="review-author">
+                            <span class="author-avatar"
+                                th:text="${#strings.substring(recensione.autore.nome, 0, 1)}">U</span>
+                            <div class="author-info">
+                                <span class="author-name"
+                                    th:text="${recensione.autore.nome} + ' ' + ${recensione.autore.cognome}">Utente</span>
+                                <span class="review-date"
+                                    th:text="${#temporals.format(recensione.dataPubblicazione, 'dd MMM yyyy')}">01 Gen
+                                    2024</span>
+                            </div>
+                        </div>
+                        <div class="review-rating">
+                            <span th:each="i : ${#numbers.sequence(1, (recensione.voto > 5 ? 5 : recensione.voto))}" class="star filled">★</span>
+                            <span th:if="${recensione.voto < 5}" th:each="i : ${#numbers.sequence(recensione.voto + 1, 5)}" class="star empty">★</span>
+                        </div>
+                    </div>
+                    <p class="review-text" th:text="${recensione.testo}">Testo della recensione...</p>
+
+                    <!-- Azioni recensione -->
+                    <div class="review-actions" sec:authorize="isAuthenticated()">
+                        <!-- Modifica (solo autore della recensione) -->
+                        <a th:if="${#authorization.expression('isAuthenticated()') and #authentication.principal.username == recensione.autore.credentials.email}"
+                            th:href="@{/ricetta/{ricettaId}/recensione/edit/{recensioneId}(ricettaId=${ricetta.id}, recensioneId=${recensione.id})}"
+                            class="btn btn-review-edit">
+                            <span>✏️</span> Modifica
+                        </a>
+
+                        <!-- Elimina (autore della recensione o admin) -->
+                        <a th:if="${#authorization.expression('isAuthenticated()') and (#authentication.principal.username == recensione.autore.credentials.email or #authorization.expression('hasAuthority(''ADMIN'')'))}"
+                            th:href="@{/ricetta/{ricettaId}/recensione/delete/{recensioneId}(ricettaId=${ricetta.id}, recensioneId=${recensione.id})}"
+                            class="btn btn-review-delete"
+                            onclick="return confirm('Sei sicuro di voler eliminare questa recensione?')">
+                            <span>🗑️</span> Elimina
+                        </a>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+    </main>
+
+</body>
+
+</html>

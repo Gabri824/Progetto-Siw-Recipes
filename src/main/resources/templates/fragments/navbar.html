@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<body>
+
+    <nav th:fragment="navbar">
+        <div class="logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+
+        <div class="nav-links">
+            <a th:href="@{/}">HOME</a>
+            <a th:href="@{/elencoRicette}">RICETTE</a>
+            <a sec:authorize="isAuthenticated()" th:href="@{/profilo}">PROFILO</a>
+            <a sec:authorize="isAuthenticated() and hasAuthority('ADMIN')" th:href="@{/admin/dashboard}">DASHBOARD</a>
+        </div>
+
+        <div class="nav-auth">
+            <a sec:authorize="!isAuthenticated()" th:href="@{/login}" class="nav-btn">LOGIN</a>
+            <a sec:authorize="!isAuthenticated()" th:href="@{/register}" class="nav-btn">REGISTER</a>
+            <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="nav-btn">ESCI</button>
+            </form>
+        </div>
+    </nav>
+
+</body>
+
+</html>

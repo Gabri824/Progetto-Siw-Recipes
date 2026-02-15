@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SiwRecipes - Login</title>
+    <link rel="stylesheet" th:href="@{/css/auth.css}">
+</head>
+
+<body>
+    <div class="auth-topbar">
+        <div class="auth-logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+        <a th:href="@{/}" class="btn-home">TORNA ALLA HOME</a>
+    </div>
+
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1>Accedi</h1>
+            <p class="auth-subtitle">Bentornato! Inserisci le tue credenziali per accedere</p>
+
+            <div th:if="${param.error}" class="alert alert-error">
+                <span>Email o password non validi</span>
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                <span>Logout effettuato con successo</span>
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group">
+                    <label for="username">Email</label>
+                    <input type="email" id="username" name="username" placeholder="La tua email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="La tua password" required>
+                </div>
+
+                <button type="submit" class="btn-submit">Accedi</button>
+            </form>
+
+            <div class="auth-footer">
+                <p>Non hai un account? <a th:href="@{/register}">Registrati</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

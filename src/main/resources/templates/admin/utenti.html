@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title>SiwRecipes - Gestione Utenti</title>
+    <link rel="stylesheet" th:href="@{/css/utenti.css}">
+</head>
+
+<body>
+    <!-- Barra superiore -->
+    <div class="admin-topbar">
+        <div class="admin-logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+        <a th:href="@{/admin/dashboard}" class="btn-back">TORNA ALLA DASHBOARD</a>
+    </div>
+
+    <div class="admin-container">
+        <!-- Header -->
+        <div class="admin-card header-card">
+            <div class="card-header">
+                <h1>Gestione Utenti</h1>
+                <p class="admin-subtitle">Visualizza e gestisci tutti gli utenti registrati</p>
+            </div>
+        </div>
+
+        <!-- Barra di ricerca -->
+        <div class="admin-card search-card">
+            <form th:action="@{/admin/utenti}" method="get" class="search-form">
+                <div class="search-input-wrapper">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Cerca per nome o cognome..."
+                        class="search-input">
+                    <button type="submit" class="btn-search">Cerca</button>
+                </div>
+                <a th:if="${keyword != null}" th:href="@{/admin/utenti}" class="btn-reset">Mostra tutti</a>
+            </form>
+        </div>
+
+        <!-- Tabella Utenti -->
+        <div class="admin-card users-card">
+            <div class="card-header">
+                <h2>Elenco Utenti</h2>
+                <span class="count-badge" th:text="${#lists.size(utenti)}">0</span>
+            </div>
+
+            <div th:if="${#lists.isEmpty(utenti)}" class="empty-state">
+                <p th:if="${keyword != null}">Nessun utente trovato per "<span th:text="${keyword}"></span>"</p>
+                <p th:unless="${keyword != null}">Nessun utente registrato.</p>
+            </div>
+
+            <div class="users-table-wrapper" th:unless="${#lists.isEmpty(utenti)}">
+                <table class="users-table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Cognome</th>
+                            <th>Email</th>
+                            <th>Stato</th>
+                            <th>Azioni</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="utente : ${utenti}" th:classappend="${utente.banned} ? 'banned-row' : ''">
+                            <td th:text="${utente.nome}">Nome</td>
+                            <td th:text="${utente.cognome}">Cognome</td>
+                            <td th:text="${utente.credentials.email}">email@example.com</td>
+                            <td>
+                                <span th:if="${utente.banned}" class="status-badge status-banned">Bannato</span>
+                                <span th:unless="${utente.banned}" class="status-badge status-active">Attivo</span>
+                            </td>
+                            <td class="action-cell">
+                                <form th:if="${!utente.banned}" th:action="@{/admin/ban/{id}(id=${utente.id})}"
+                                    method="post" class="action-form">
+                                    <button type="submit" class="btn-ban"
+                                        onclick="return confirm('Sei sicuro di voler bannare questo utente?')">
+                                        BAN
+                                    </button>
+                                </form>
+                                <form th:if="${utente.banned}" th:action="@{/admin/unban/{id}(id=${utente.id})}"
+                                    method="post" class="action-form">
+                                    <button type="submit" class="btn-unban"
+                                        onclick="return confirm('Sei sicuro di voler riattivare questo utente?')">
+                                        Riattiva
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

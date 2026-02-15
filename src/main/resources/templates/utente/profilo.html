@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title>SiwRecipes - Profilo</title>
+    <link rel="stylesheet" th:href="@{/css/profilo.css}">
+</head>
+
+<body>
+    <!-- Barra superiore (stile login) -->
+    <div class="profile-topbar">
+        <div class="profile-logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+        <a th:href="@{/}" class="btn-home">TORNA ALLA HOME</a>
+    </div>
+
+    <div class="profile-container">
+        <!-- Dati Utente Card -->
+        <div class="profile-card user-info-card">
+            <div class="card-header">
+                <h1>Il Mio Profilo</h1>
+                <p class="profile-subtitle">Gestisci i tuoi dati e le tue attività</p>
+            </div>
+
+            <div class="user-details">
+                <div class="detail-row">
+                    <span class="detail-label">Nome</span>
+                    <span class="detail-value" th:text="${utente.nome}">Nome</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Cognome</span>
+                    <span class="detail-value" th:text="${utente.cognome}">Cognome</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Data di Nascita</span>
+                    <span class="detail-value" th:text="${utente.dataDiNascita}">01/01/2000</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value"
+                        th:text="${utente.credentials != null} ? ${utente.credentials.email} : 'N/A'">email@example.com</span>
+                </div>
+            </div>
+
+            <!-- Pulsanti Modifica -->
+            <div class="action-buttons">
+                <a th:href="@{/utente/edit/{id}(id=${utente.id})}" class="btn-primary">
+                    Modifica Dati Personali
+                </a>
+                <a th:href="@{/profilo/credentials}" class="btn-secondary">
+                    Modifica Credenziali
+                </a>
+            </div>
+        </div>
+
+        <!-- Le Mie Ricette -->
+        <div class="profile-card recipes-card">
+            <div class="card-header">
+                <h2>Le Mie Ricette</h2>
+                <span class="count-badge" th:text="${#lists.size(utente.ricette)}">0</span>
+            </div>
+
+            <div th:if="${#lists.isEmpty(utente.ricette)}" class="empty-state">
+                <p>Non hai ancora creato nessuna ricetta.</p>
+                <a th:href="@{/ricetta/new}" class="btn-create">Crea la tua prima ricetta</a>
+            </div>
+
+            <ul class="items-list" th:unless="${#lists.isEmpty(utente.ricette)}">
+                <li th:each="ricetta : ${utente.ricette}" class="list-item">
+                    <div class="item-content">
+                        <a th:href="@{/ricetta/{id}(id=${ricetta.id})}" class="item-title" th:text="${ricetta.titolo}">
+                            Nome Ricetta
+                        </a>
+                        <span class="item-meta">
+                            <span th:text="${ricetta.categoria}">Portata</span> &bull;
+                            <span th:text="${ricetta.tempoPreparazione}">30</span> min
+                        </span>
+                    </div>
+                    <a th:href="@{/ricetta/delete/{id}(id=${ricetta.id}, fromProfile=${utente.id})}" class="btn-delete"
+                        onclick="return confirm('Sei sicuro di voler eliminare questa ricetta?');">
+                        Elimina
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Le Mie Recensioni -->
+        <div class="profile-card reviews-card">
+            <div class="card-header">
+                <h2>Le Mie Recensioni</h2>
+                <span class="count-badge" th:text="${#lists.size(utente.recensioni)}">0</span>
+            </div>
+
+            <div th:if="${#lists.isEmpty(utente.recensioni)}" class="empty-state">
+                <p>Non hai ancora scritto nessuna recensione.</p>
+            </div>
+
+            <ul class="items-list" th:unless="${#lists.isEmpty(utente.recensioni)}">
+                <li th:each="recensione : ${utente.recensioni}" class="list-item">
+                    <div class="item-content">
+                        <a th:href="@{/ricetta/{id}(id=${recensione.ricetta.id})}" class="item-title">
+                            Recensione per: <span th:text="${recensione.ricetta.titolo}">Nome Ricetta</span>
+                        </a>
+                        <div class="review-rating">
+                            <span class="stars">
+                                <span th:each="i : ${#numbers.sequence(1, recensione.voto)}">★</span>
+                                <span th:each="i : ${#numbers.sequence(recensione.voto + 1, 5)}"
+                                    class="star-empty">★</span>
+                            </span>
+                        </div>
+                        <p class="item-description" th:text="${recensione.testo}">Commento recensione...</p>
+                    </div>
+                    <a th:href="@{/ricetta/{ricettaId}/recensione/delete/{recensioneId}(ricettaId=${recensione.ricetta.id}, recensioneId=${recensione.id}, fromProfile=${utente.id})}"
+                        class="btn-delete"
+                        onclick="return confirm('Sei sicuro di voler eliminare questa recensione?');">
+                        Elimina
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</body>
+
+</html>

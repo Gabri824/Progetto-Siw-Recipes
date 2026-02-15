@@ -1,0 +1,402 @@
+/* Gestione Utenti Styles - Palette colori Logo SiwRecipes */
+/* Verde salvia: #5c6b4a | Terracotta: #a65c4e | Crema: #f5f0e6 | Oro: #e8c45a */
+
+@import url('https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,100..900;1,100..900&family=Oswald:wght@200..700&family=Roboto+Condensed:ital,wght@0,100..900;1,100..900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Jost', sans-serif;
+    background: linear-gradient(135deg, #f5f0e6 0%, #ebe5d9 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+/* Barra superiore */
+.admin-topbar {
+    display: flex;
+    justify-content: space-between;
+    background-color: #5c6b4a;
+    align-items: center;
+    padding: 25px 40px;
+}
+
+.admin-logo a {
+    display: inline-block;
+}
+
+.admin-logo img {
+    height: 100px;
+    width: auto;
+    border-radius: 12px;
+    padding: 8px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    transition: transform 0.3s ease;
+}
+
+.admin-logo img:hover {
+    transform: scale(1.05);
+}
+
+.btn-back {
+    padding: 15px 30px;
+    background-color: #a65c4e;
+    color: #f5f0e6;
+    text-decoration: none;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background-color: #8f4e42;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(166, 92, 78, 0.4);
+}
+
+/* Container principale */
+.admin-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 40px;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Card generica */
+.admin-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.card-header h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 2rem;
+    color: #5c6b4a;
+    font-weight: 700;
+}
+
+.card-header h2 {
+    font-family: 'Roboto Condensed', sans-serif;
+    font-size: 1.5rem;
+    color: #5c6b4a;
+    font-weight: 600;
+}
+
+.admin-subtitle {
+    color: #666;
+    font-size: 1rem;
+    width: 100%;
+}
+
+/* Header Card */
+.header-card {
+    text-align: center;
+    background: linear-gradient(135deg, #5c6b4a 0%, #4a5a3a 100%);
+    color: #f5f0e6;
+}
+
+.header-card .card-header {
+    margin-bottom: 0;
+    justify-content: center;
+}
+
+.header-card .card-header h1 {
+    color: #f5f0e6;
+}
+
+.header-card .admin-subtitle {
+    color: rgba(245, 240, 230, 0.85);
+}
+
+/* Search Card */
+.search-card {
+    padding: 20px 30px;
+}
+
+.search-form {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.search-input-wrapper {
+    flex: 1;
+    display: flex;
+    gap: 10px;
+    min-width: 300px;
+}
+
+.search-input {
+    flex: 1;
+    padding: 14px 20px;
+    border: 2px solid #e5e5e5;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-family: 'Jost', sans-serif;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: #5c6b4a;
+    box-shadow: 0 0 0 3px rgba(92, 107, 74, 0.15);
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.btn-search {
+    padding: 14px 28px;
+    background-color: #5c6b4a;
+    color: #f5f0e6;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-search:hover {
+    background-color: #4a5a3a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(92, 107, 74, 0.3);
+}
+
+.btn-reset {
+    padding: 14px 20px;
+    background-color: transparent;
+    color: #a65c4e;
+    border: 2px solid #a65c4e;
+    border-radius: 10px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.btn-reset:hover {
+    background-color: #a65c4e;
+    color: #f5f0e6;
+}
+
+/* Count Badge */
+.count-badge {
+    background: #5c6b4a;
+    color: #f5f0e6;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    font-family: 'Oswald', sans-serif;
+}
+
+/* Empty State */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #888;
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+}
+
+/* Users Table */
+.users-table-wrapper {
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+.users-table thead {
+    background: #f8f8f8;
+}
+
+.users-table th {
+    padding: 15px 20px;
+    text-align: left;
+    font-family: 'Roboto Condensed', sans-serif;
+    font-weight: 600;
+    color: #5c6b4a;
+    border-bottom: 2px solid #eee;
+}
+
+.users-table td {
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.users-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.users-table tbody tr:hover {
+    background-color: #fafafa;
+}
+
+.banned-row {
+    background-color: #fff5f5 !important;
+}
+
+.banned-row:hover {
+    background-color: #ffecec !important;
+}
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    font-family: 'Oswald', sans-serif;
+    letter-spacing: 0.5px;
+}
+
+.status-active {
+    background-color: #e8f5e9;
+    color: #2e7d32;
+}
+
+.status-banned {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* Action Buttons */
+.action-cell {
+    white-space: nowrap;
+}
+
+.action-form {
+    display: inline;
+}
+
+.btn-ban,
+.btn-unban {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: 'Oswald', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-ban {
+    background-color: #c62828;
+    color: #fff;
+}
+
+.btn-ban:hover {
+    background-color: #b71c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+}
+
+.btn-unban {
+    background-color: #2e7d32;
+    color: #fff;
+}
+
+.btn-unban:hover {
+    background-color: #1b5e20;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .admin-container {
+        padding: 20px;
+    }
+
+    .admin-card {
+        padding: 20px;
+    }
+
+    .card-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .search-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .search-input-wrapper {
+        min-width: unset;
+        flex-direction: column;
+    }
+
+    .users-table th,
+    .users-table td {
+        padding: 12px 10px;
+        font-size: 0.85rem;
+    }
+
+    .btn-ban,
+    .btn-unban {
+        padding: 8px 14px;
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .admin-topbar {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .admin-logo img {
+        height: 70px;
+    }
+
+    .btn-back {
+        padding: 12px 20px;
+        font-size: 0.95rem;
+    }
+
+    .status-badge {
+        padding: 4px 10px;
+        font-size: 0.75rem;
+    }
+}

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SiwRecipes - Nuova Ricetta</title>
+    <link rel="stylesheet" th:href="@{/css/formRicetta.css}">
+</head>
+
+<body>
+
+    <!-- Barra superiore stile login -->
+    <div class="form-topbar">
+        <div class="form-logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+        <a th:href="@{/elencoRicette}" class="btn-back">TORNA INDIETRO</a>
+    </div>
+
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Crea una <span class="highlight">Nuova Ricetta</span></h1>
+                <p>Condividi la tua creazione culinaria con la community</p>
+            </div>
+
+            <form th:action="@{/formRicetta}" th:object="${ricetta}" method="post" enctype="multipart/form-data"
+                class="recipe-form">
+
+                <!-- Messaggio di errore -->
+                <div th:if="${messaggioErrore}" class="error-message">
+                    <span class="error-icon">⚠</span>
+                    <span th:text="${messaggioErrore}"></span>
+                </div>
+
+                <!-- Titolo -->
+                <div class="form-group">
+                    <label for="titolo">
+                        <span class="label-icon">📝</span> Titolo della Ricetta *
+                    </label>
+                    <input type="text" id="titolo" th:field="*{titolo}" placeholder="Es. Pasta alla Carbonara" required>
+                </div>
+
+                <!-- Immagine -->
+                <div class="form-group">
+                    <label for="file">
+                        <span class="label-icon">📷</span> Immagine della Ricetta
+                    </label>
+                    <input type="file" id="file" name="file" accept="image/*" class="file-input">
+                    <p class="input-hint">Formati supportati: JPG, PNG, GIF (max 50MB)</p>
+                </div>
+
+                <!-- Descrizione -->
+                <div class="form-group">
+                    <label for="descrizione">
+                        <span class="label-icon">📖</span> Descrizione
+                    </label>
+                    <textarea id="descrizione" th:field="*{descrizione}" rows="3"
+                        placeholder="Una breve descrizione della tua ricetta..."></textarea>
+                </div>
+
+                <!-- Procedimento -->
+                <div class="form-group">
+                    <label for="procedimento">
+                        <span class="label-icon">👨‍🍳</span> Procedimento
+                    </label>
+                    <textarea id="procedimento" th:field="*{procedimento}" rows="6"
+                        placeholder="Descrivi passo dopo passo come preparare la ricetta..."></textarea>
+                </div>
+
+                <!-- Tempo di preparazione e Difficoltà (inline) -->
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="tempoPreparazione">
+                            <span class="label-icon">⏱️</span> Tempo di Preparazione (minuti)
+                        </label>
+                        <input type="number" id="tempoPreparazione" th:field="*{tempoPreparazione}" min="1"
+                            placeholder="Es. 30">
+                    </div>
+
+                    <div class="form-group half">
+                        <label for="difficolta">
+                            <span class="label-icon">📊</span> Difficoltà
+                        </label>
+                        <select id="difficolta" th:field="*{difficoltà}">
+                            <option value="">Seleziona la difficoltà</option>
+                            <option value="Facile">Facile</option>
+                            <option value="Media">Media</option>
+                            <option value="Difficile">Difficile</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Categoria -->
+                <div class="form-group">
+                    <label for="categoria">
+                        <span class="label-icon">🍽️</span> Categoria
+                    </label>
+                    <select id="categoria" th:field="*{categoria}">
+                        <option value="">Seleziona una categoria</option>
+                        <option value="Antipasti">Antipasti</option>
+                        <option value="Primi">Primi Piatti</option>
+                        <option value="Secondi">Secondi Piatti</option>
+                        <option value="Contorni">Contorni</option>
+                        <option value="Dolci">Dolci</option>
+                        <option value="Vegetariani">Vegetariani</option>
+                        <option value="Vegani">Vegani</option>
+                        <option value="Salse">Salse e Condimenti</option>
+                    </select>
+                </div>
+
+                <!-- Ingredienti -->
+                <div class="form-group ingredients-section">
+                    <label>
+                        <span class="label-icon">🥕</span> Ingredienti
+                    </label>
+                    <div id="ingredienti-container">
+                        <!-- Primo ingrediente di default -->
+                        <div class="ingrediente-row">
+                            <input type="text" name="ingredienti[0].nome" placeholder="Nome ingrediente"
+                                class="ingrediente-nome">
+                            <input type="number" name="ingredienti[0].quantita" placeholder="Qtà" step="0.1" min="0"
+                                class="ingrediente-quantita">
+                            <select name="ingredienti[0].unitaMisura" class="ingrediente-unita">
+                                <option value="">Unità</option>
+                                <option value="g">g</option>
+                                <option value="kg">kg</option>
+                                <option value="ml">ml</option>
+                                <option value="l">l</option>
+                                <option value="cucchiai">cucchiai</option>
+                                <option value="cucchiaini">cucchiaini</option>
+                                <option value="pezzi">pezzi</option>
+                                <option value="spicchi">spicchi</option>
+                                <option value="q.b.">q.b.</option>
+                            </select>
+                            <button type="button" class="btn-remove-ingrediente" onclick="rimuoviIngrediente(this)"
+                                title="Rimuovi">✕</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-ingrediente" onclick="aggiungiIngrediente()">
+                        <span>➕</span> Aggiungi Ingrediente
+                    </button>
+                </div>
+
+                <!-- Bottoni -->
+                <div class="form-actions">
+                    <a th:href="@{/elencoRicette}" class="btn btn-secondary">Annulla</a>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">✨</span> Pubblica Ricetta
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let ingredienteIndex = 1;
+
+        function aggiungiIngrediente() {
+            const container = document.getElementById('ingredienti-container');
+            const newRow = document.createElement('div');
+            newRow.className = 'ingrediente-row';
+            newRow.innerHTML = `
+                <input type="text" name="ingredienti[${ingredienteIndex}].nome" placeholder="Nome ingrediente" class="ingrediente-nome">
+                <input type="number" name="ingredienti[${ingredienteIndex}].quantita" placeholder="Qtà" step="0.1" min="0" class="ingrediente-quantita">
+                <select name="ingredienti[${ingredienteIndex}].unitaMisura" class="ingrediente-unita">
+                    <option value="">Unità</option>
+                    <option value="g">g</option>
+                    <option value="kg">kg</option>
+                    <option value="ml">ml</option>
+                    <option value="l">l</option>
+                    <option value="cucchiai">cucchiai</option>
+                    <option value="cucchiaini">cucchiaini</option>
+                    <option value="pezzi">pezzi</option>
+                    <option value="spicchi">spicchi</option>
+                    <option value="q.b.">q.b.</option>
+                </select>
+                <button type="button" class="btn-remove-ingrediente" onclick="rimuoviIngrediente(this)" title="Rimuovi">✕</button>
+            `;
+            container.appendChild(newRow);
+            ingredienteIndex++;
+
+            // Animazione entrata
+            newRow.style.opacity = '0';
+            newRow.style.transform = 'translateY(-10px)';
+            setTimeout(() => {
+                newRow.style.transition = 'all 0.3s ease';
+                newRow.style.opacity = '1';
+                newRow.style.transform = 'translateY(0)';
+            }, 10);
+        }
+
+        function rimuoviIngrediente(button) {
+            const container = document.getElementById('ingredienti-container');
+            const rows = container.querySelectorAll('.ingrediente-row');
+
+            // Mantieni almeno una riga
+            if (rows.length > 1) {
+                const row = button.closest('.ingrediente-row');
+                row.style.transition = 'all 0.3s ease';
+                row.style.opacity = '0';
+                row.style.transform = 'translateX(-20px)';
+                setTimeout(() => {
+                    row.remove();
+                    rinumeraIngredienti();
+                }, 300);
+            }
+        }
+
+        function rinumeraIngredienti() {
+            const container = document.getElementById('ingredienti-container');
+            const rows = container.querySelectorAll('.ingrediente-row');
+            rows.forEach((row, index) => {
+                row.querySelector('.ingrediente-nome').name = `ingredienti[${index}].nome`;
+                row.querySelector('.ingrediente-quantita').name = `ingredienti[${index}].quantita`;
+                row.querySelector('.ingrediente-unita').name = `ingredienti[${index}].unitaMisura`;
+            });
+            ingredienteIndex = rows.length;
+        }
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+
+<head>
+    <title>SiwRecipes - Ricette</title>
+    <link rel="stylesheet" th:href="@{/css/navbar.css}">
+    <link rel="stylesheet" th:href="@{/css/ricette.css}">
+</head>
+
+<body>
+
+    <div id="top" th:replace="~{fragments/navbar :: navbar}"></div>
+
+    <main class="ricette-container">
+        <section class="ricette-header">
+            <h1>Le Nostre <span class="highlight">Ricette</span></h1>
+            <p class="subtitle">Esplora tutte le ricette della nostra community</p>
+        </section>
+
+        <!-- Actions Bar -->
+        <div class="actions-bar" style="text-align: center; margin-bottom: 2rem;" sec:authorize="isAuthenticated()">
+            <a th:href="@{/formRicetta}" class="btn-filter" style="display: inline-block; text-decoration: none;">Crea
+                Nuova Ricetta</a>
+        </div>
+
+        <!-- Filtri e ricerca -->
+        <section class="filtri-section">
+            <form th:action="@{/elencoRicette}" method="get" class="filtri-form">
+                <div class="search-group">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Cerca ricetta..."
+                        class="search-input">
+                </div>
+                <div class="filter-group">
+                    <select name="difficoltà" class="filter-select">
+                        <option value="">Tutte le difficoltà</option>
+                        <option value="Facile" th:selected="${difficoltà == 'Facile'}">Facile</option>
+                        <option value="Media" th:selected="${difficoltà == 'Media'}">Media</option>
+                        <option value="Difficile" th:selected="${difficoltà == 'Difficile'}">Difficile</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-filter">Cerca</button>
+            </form>
+        </section>
+
+        <!-- Messaggio di successo/errore -->
+        <div th:if="${messaggioSuccesso}" class="alert alert-success" th:text="${messaggioSuccesso}"></div>
+        <div th:if="${messaggioErrore}" class="alert alert-error" th:text="${messaggioErrore}"></div>
+
+        <!-- Griglia ricette -->
+        <section class="ricette-grid">
+            <div th:if="${ricette.isEmpty()}" class="no-ricette">
+                <p>Nessuna ricetta trovata</p>
+            </div>
+
+            <article th:each="ricetta : ${ricette}" class="ricetta-card">
+                <div class="ricetta-image">
+                    <img th:if="${ricetta.immagine != null}" th:src="@{'/ricetta/' + ${ricetta.id} + '/immagine'}"
+                        alt="Immagine ricetta">
+                    <img th:unless="${ricetta.immagine != null}" th:src="@{/images/placeholder-ricetta.jpg}"
+                        alt="Immagine ricetta">
+                    <span class="difficolta-badge" th:text="${ricetta.difficoltà}"
+                        th:classappend="${ricetta.difficoltà == 'Facile'} ? 'facile' : (${ricetta.difficoltà == 'Media'} ? 'media' : 'difficile')"></span>
+                </div>
+                <div class="ricetta-info">
+                    <h3 class="ricetta-titolo" th:text="${ricetta.titolo}">Titolo Ricetta</h3>
+                    <p class="ricetta-descrizione" th:text="${ricetta.descrizione}">Descrizione ricetta...</p>
+                    <div class="ricetta-meta">
+                        <span class="meta-item">
+                            <i class="icon-time"></i>
+                            <span th:text="${ricetta.tempoPreparazione} + ' min'">30 min</span>
+                        </span>
+                        <span class="meta-item">
+                            <i class="icon-category"></i>
+                            <span th:text="${ricetta.categoria}">Categoria</span>
+                        </span>
+                    </div>
+                    <div class="ricetta-autore">
+                        <span>di <strong
+                                th:text="${ricetta.autore.nome + ' ' + ricetta.autore.cognome}">Autore</strong></span>
+                    </div>
+                    <a th:href="@{/ricetta/{id}(id=${ricetta.id})}" class="btn-vedi">Vedi Ricetta</a>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <a href="#top" class="scroll-to-top" title="Torna all'inizio">↑</a>
+
+</body>
+
+</html>

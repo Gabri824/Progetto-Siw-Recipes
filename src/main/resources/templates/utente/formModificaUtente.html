@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SiwRecipes - Modifica Profilo</title>
+    <link rel="stylesheet" th:href="@{/css/profilo.css}">
+</head>
+
+<body>
+    <!-- Barra superiore (stile profilo) -->
+    <div class="profile-topbar">
+        <div class="profile-logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+        <a th:href="@{/utente/{id}(id=${utente.id})}" class="btn-home">TORNA INDIETRO</a>
+    </div>
+
+    <div class="profile-container">
+        <!-- Form Card -->
+        <div class="profile-card">
+            <div class="card-header">
+                <h1>Modifica Dati Personali</h1>
+                <p class="profile-subtitle">Aggiorna le informazioni del tuo profilo</p>
+            </div>
+
+            <!-- Messaggio successo -->
+            <div th:if="${messaggioSuccesso}" class="alert alert-success">
+                <span th:text="${messaggioSuccesso}"></span>
+            </div>
+
+            <!-- Messaggio errore -->
+            <div th:if="${messaggioErrore}" class="alert alert-error">
+                <span th:text="${messaggioErrore}"></span>
+            </div>
+
+            <form th:action="@{/utente/edit/{id}(id=${utente.id})}" th:object="${utente}" method="post">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="nome">Nome</label>
+                        <input type="text" id="nome" th:field="*{nome}" placeholder="Il tuo nome" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="cognome">Cognome</label>
+                        <input type="text" id="cognome" th:field="*{cognome}" placeholder="Il tuo cognome" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="dataDiNascita">Data di Nascita</label>
+                    <input type="date" id="dataDiNascita" th:field="*{dataDiNascita}">
+                </div>
+
+                <button type="submit" class="btn-submit">Salva Modifiche</button>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

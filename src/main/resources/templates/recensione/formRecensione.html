@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>SiwRecipes - Nuova Recensione</title>
+    <link rel="stylesheet" th:href="@{/css/formRecensione.css}">
+</head>
+
+<body>
+
+    <!-- Barra superiore stile login -->
+    <div class="form-topbar">
+        <div class="form-logo">
+            <a th:href="@{/}">
+                <img th:src="@{/images/Logo-SiwRecipes.png}" alt="SiwRecipes Logo">
+            </a>
+        </div>
+        <a th:href="@{/ricetta/{id}(id=${ricetta.id})}" class="btn-back">TORNA INDIETRO</a>
+    </div>
+
+    <div class="form-container">
+        <div class="form-card">
+            <div class="form-header">
+                <h1>Scrivi una <span class="highlight">Recensione</span></h1>
+                <p>Condividi la tua opinione su "<span th:text="${ricetta.titolo}">Ricetta</span>"</p>
+            </div>
+
+            <form th:action="@{/ricetta/{id}/formRecensione(id=${ricetta.id})}" th:object="${recensione}" method="post"
+                class="review-form">
+
+                <!-- Messaggio di errore -->
+                <div th:if="${messaggioErrore}" class="error-message">
+                    <span class="error-icon">⚠</span>
+                    <span th:text="${messaggioErrore}"></span>
+                </div>
+
+                <!-- Voto con stelle -->
+                <div class="form-group">
+                    <label>
+                        <span class="label-icon">⭐</span> Il tuo voto *
+                    </label>
+                    <div class="star-rating-input">
+                        <input type="radio" name="voto" value="5" id="star5" required>
+                        <label for="star5" title="5 stelle">★</label>
+                        <input type="radio" name="voto" value="4" id="star4">
+                        <label for="star4" title="4 stelle">★</label>
+                        <input type="radio" name="voto" value="3" id="star3">
+                        <label for="star3" title="3 stelle">★</label>
+                        <input type="radio" name="voto" value="2" id="star2">
+                        <label for="star2" title="2 stelle">★</label>
+                        <input type="radio" name="voto" value="1" id="star1">
+                        <label for="star1" title="1 stella">★</label>
+                    </div>
+                    <span class="rating-text" id="rating-text">Seleziona un voto</span>
+                </div>
+
+                <!-- Testo Recensione -->
+                <div class="form-group">
+                    <label for="testo">
+                        <span class="label-icon">📝</span> La tua recensione *
+                    </label>
+                    <textarea id="testo" th:field="*{testo}" rows="6"
+                        placeholder="Cosa ne pensi di questa ricetta? Racconta la tua esperienza..."
+                        required></textarea>
+                    <span class="char-hint">Minimo 10 caratteri</span>
+                </div>
+
+                <!-- Bottoni -->
+                <div class="form-actions">
+                    <a th:href="@{/ricetta/{id}(id=${ricetta.id})}" class="btn btn-secondary">Annulla</a>
+                    <button type="submit" class="btn btn-primary">
+                        <span class="btn-icon">✨</span> Pubblica Recensione
+                    </button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Aggiorna testo del rating quando si seleziona una stella
+        const ratingTexts = {
+            '1': '😞 Pessima',
+            '2': '😕 Scarsa',
+            '3': '😐 Nella media',
+            '4': '😊 Buona',
+            '5': '🤩 Eccellente!'
+        };
+
+        document.querySelectorAll('.star-rating-input input').forEach(input => {
+            input.addEventListener('change', function () {
+                document.getElementById('rating-text').textContent = ratingTexts[this.value];
+            });
+        });
+    </script>
+
+</body>
+
+</html>
